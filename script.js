@@ -3,13 +3,6 @@ const welcome = document.getElementById("title");
 const quizQuestions = document.querySelector(".question-answears");
 const againButton = document.getElementById("play-again");
 
-// Starting the Quiz
-startButton.addEventListener("click", () => {
-  startButton.style.display = "none";
-  welcome.style.display = "none";
-  quizQuestions.style.display = "block";
-  createQuiz();
-});
 // Preparing the quiz questions and answears
 const questions = [
   {
@@ -41,13 +34,28 @@ const questions = [
     correctAnswer: "push()",
   },
 ];
+
+// initializing the quiz parameters
+
 let questionNumber = 0;
 let score = 0;
 const quizLength = questions.length;
 
 let answearSelected = false;
 
+// Starting the Quiz
+startButton.addEventListener("click", () => {
+  startButton.style.display = "none";
+  welcome.style.display = "none";
+  quizQuestions.style.display = "block";
+  createQuiz();
+});
+
+
+// Creating each quiz question and its answears
+
 function createQuiz() {
+  // Preparing the elements
   const question = document.createElement("h2");
   question.innerText = questions[questionNumber].question;
   question.classList.add("question");
@@ -55,17 +63,19 @@ function createQuiz() {
   answears.classList.add("answears");
   quizQuestions.append(question);
   quizQuestions.append(answears);
+  // Looping over the answears and adding them to the DOM under the question
   questions[questionNumber].answers.map((info) => {
     const answear = document.createElement("p");
     answear.innerText = info;
     answear.classList.add("answear");
     answears.append(answear);
   });
+  // Creating the nextButton so we can move on to the next question
   const nextButton = document.createElement("button");
   nextButton.setAttribute("id", "next-question");
   nextButton.innerText = "Next Question";
   quizQuestions.append(nextButton);
-
+  // Checking if the selected answear is correct and revealing the results
   const allAnswears = document.querySelectorAll(".answear");
   allAnswears.forEach((answear) => {
     answear.addEventListener("click", (e) => {
@@ -88,6 +98,8 @@ function createQuiz() {
       });
     });
   });
+
+  /// Here when the next button is clicked , we will see if there's still more questions the quiz continues otherwise we finish the quiz and reveal the final score 
 
   nextButton.addEventListener("click", () => {
     if (answearSelected === false) {
@@ -116,16 +128,21 @@ function createQuiz() {
   });
 }
 
+// Deleting previous question 
+
 function deleteQuiz() {
   while (quizQuestions.firstChild) {
     quizQuestions.removeChild(quizQuestions.firstChild);
   }
 }
+
+// If User wants to play again , we need to set everything back to where it begins
+
 againButton.addEventListener("click", () => {
   quizQuestions.style.width = "90%";
   questionNumber = 0;
   score = 0;
   againButton.style.display = "none";
-  deleteQuiz(); // Clear previous quiz results
+  deleteQuiz();
   createQuiz();
 });
